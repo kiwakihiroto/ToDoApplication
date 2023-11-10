@@ -40,7 +40,7 @@ router.get('/admin', async function(req, res, next){
   }
   res.render('admin',{
     title:'Admin',
-    login: req.session.login,
+    login: (req.session && req.session.login) ? req.session.login : {},
   });
 });
 router.post('/admin', async function(req, res, next){
@@ -51,7 +51,7 @@ router.post('/admin', async function(req, res, next){
   await dbdo.exec(sql);
   res.render('admin', {
     title: 'Admin',
-    login: req.session.login,
+    login: (req.session && req.session.login) ? req.session.login : {},
   });
 });
 
@@ -67,7 +67,7 @@ router.get('/admin2', async function(req, res, next){
   let records = await dball.getAllRows(sql);
   res.render('admin2', {
     title: 'Admin2',
-    login: req.session.login,
+    login: (req.session && req.session.login) ? req.session.login : {},
     data: records,
   });
 });
