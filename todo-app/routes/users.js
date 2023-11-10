@@ -9,14 +9,14 @@ var dbdo = require('../db/exec.js');
 router.get('/login', function(req, res, next){
   res.render('login',{
     title: 'Login',
-    login: req.session.login
+    login: (req.session && req.session.login) ? req.session.login : {},
   });
 });
 router.post('/login', async function(req, res, next){
   let account = req.body.account;
   let pass = req.body.password;
 
-  let sql = "select * from users where acounte = '" + account + "' and password = '" + pass + "'";
+  let sql = "select * from users where account = '" + account + "' and password = '" + pass + "'";
   let record = await dbget.getRow(sql);
   if(record != undefined){
     req.session.login = record;
@@ -27,13 +27,13 @@ router.post('/login', async function(req, res, next){
 // Logout
 router.get('/logout', function(req, res, next){
   req.session.login = undefined;
-  res.redirect('/user/login');
+  res.redirect('/users/login');
 });
 
 // Admin(Add New User)
 router.get('/admin', async function(req, res, next){
   if(req.session.login == undefined){
-    res.redirect('users/login');
+    res.redirect('/users/login');
   }
   if(req.session.login.role != 'admin'){
     res.redirect('/users/login');
@@ -47,8 +47,7 @@ router.post('/admin', async function(req, res, next){
   let account = req.body.account;
   let pass = req.body.password;
   let name = req.body.name;
-  let sql = "insert into users (account, password, name, role) values ('"
-              + account + "','" + pass + "','" + name + "','user')";
+  let sql = "insert into users (account, password, name, role) values ('" + account + "','" + pass + "','" + name + "','user')";
   await dbdo.exec(sql);
   res.render('admin', {
     title: 'Admin',

@@ -3,7 +3,7 @@ exports.getAllRows = function(sql){
     let db= new sqlite3.Database('todo.db');
 
     return new Promise((resolve, reject) =>{
-        db.get(sql, (err, rows) =>{
+        db.all(sql, (err, rows) =>{
             resolve(rows);
         });
     });

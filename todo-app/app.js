@@ -23,6 +23,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+let ses_opt = {
+  secret: 'my secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {maxAge: 60 * 60 * 1000}
+};
+app.use(session(ses_opt));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -39,12 +47,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-let ses_opt = {
-  secret: 'my secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {maxAge: 60 * 60 * 1000}
-};
-app.use(session(ses_opt));
+
 
 module.exports = app;
